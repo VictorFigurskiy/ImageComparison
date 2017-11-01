@@ -18,39 +18,32 @@ public class WriteImage extends JPanel {
 
 
     private File file;
+    private BufferedImage bufferedImage;
 
     public WriteImage(File file) {
         this.file = file;
+        this.bufferedImage = readImage();
     }
 
     public BufferedImage readImage() {
-
-        BufferedImage bufferedImage = null;
-
         try {
 
-            bufferedImage = ImageIO.read(file);
+            return ImageIO.read(file);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
-//        Graphics graphics = bufferedImage.getGraphics();
-//
-//        graphics.drawString("www.w3ii.com", 20,20);
-
-        return bufferedImage;
+        return null;
     }
 
 
     @Override
     public void paint(Graphics g) {
-        BufferedImage image = readImage();
-        g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), this);
+        g.drawImage(bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), this);
     }
 
-    public int[][] getDifferent() {
+    public int[][] getPixelsRGB() {
         BufferedImage image = readImage();
 
         int height = image.getHeight();
@@ -67,8 +60,21 @@ public class WriteImage extends JPanel {
         return imageArray;
     }
 
-    public void setFile(File file) {
-        this.file = file;
-    }
+    public void setDiff(String[][] arrayDiff){
+        Color color = new Color(255,0,0);
+        int count = 0;
 
+        for (int i = 0; i < arrayDiff.length; i++) {
+            for (int j = 0; j < arrayDiff[i].length; j++) {
+                if (arrayDiff[i][j].equals("1")){
+                    bufferedImage.setRGB(j,i, color.getRGB());
+                    count++;
+                }
+
+            }
+        }
+        System.out.println(count);
+
+
+    }
 }

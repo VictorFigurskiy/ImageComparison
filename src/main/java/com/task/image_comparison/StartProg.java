@@ -1,12 +1,7 @@
 package com.task.image_comparison;
 
-import com.sun.org.apache.xerces.internal.xs.StringList;
-
 import javax.swing.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Sonik on 30.10.2017.
@@ -20,40 +15,75 @@ public class StartProg {
         WriteImage image1 = new WriteImage((new File("D:\\JAVA\\GoIT Study\\Work test assignment\\ImageComparison\\src\\main\\resources\\image1.png")));
         WriteImage image2 = new WriteImage((new File("D:\\JAVA\\GoIT Study\\Work test assignment\\ImageComparison\\src\\main\\resources\\image2.png")));
 
-        int[][] different1 = image1.getDifferent();
-        int[][] different2 = image2.getDifferent();
+        int[][] pixelsRGB1 = image1.getPixelsRGB();
+        int[][] pixelsRGB2 = image2.getPixelsRGB();
 
-        List<String> diffList = new ArrayList<String>();
+        String[][] result = new String[pixelsRGB1.length][pixelsRGB1[0].length];
 
-        for (int i = 0; i < different1.length; i++) {
-            for (int j = 0; j < different1[i].length; j++) {
-                System.out.print(different1[i][j] == different2[i][j] ? "." : "x");
-                if (different1[i][j] != different2[i][j]){
-                    diffList.add(i + " " + j);
+        for (int i = 0; i < pixelsRGB1.length; i++) {
+            for (int j = 0; j < pixelsRGB1[i].length; j++) {
+//                System.out.print(pixelsRGB1[i][j] == pixelsRGB2[i][j] ? "." : "x");
+                if (pixelsRGB1[i][j] != pixelsRGB2[i][j]) {
+                    result[i][j] = "x";
+                } else {
+                    result[i][j] = ".";
                 }
             }
-            System.out.println();
+//            System.out.println();
         }
 
-        for (String s : diffList) {
-            System.out.println(s);
-        }
 
-        System.out.println("Высота = " + different1.length);
-        System.out.println("Ширина = " + different1[0].length);
+        bordersOfDiff(result);
+//
+//        printArray(result);
 
-        System.out.println(Arrays.deepEquals(different1, different2));
-
+        image2.setDiff(result);
 
 //        frame1.getContentPane().add(image1);
-//        frame2.getContentPane().add(image2);
+        frame2.getContentPane().add(image2);
 
 //        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        frame1.setSize(1000, 800);
 //        frame1.setVisible(true);
-//
-//        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame2.setSize(1000, 800);
-//        frame2.setVisible(true);
+
+        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame2.setSize(1000, 800);
+        frame2.setVisible(true);
+
+    }
+
+    private static void bordersOfDiff(String[][] result) {
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[i].length; j++) {
+
+                if (result[i][j].equals("x") && result[i][j-1].equals(".")) {
+                    result[i][j-1]="1";
+                }
+
+            }
+        }
+
+        for (int i = 0; i < result[0].length; i++) {
+            for (int j = 0; j < result.length; j++) {
+                if (result[j][i].equals("x") && result[j-1][i].equals(".")) {
+                    result[j-1][i]="1";
+                }
+            }
+
+
+
+
+        }
+    }
+
+    private  static void printArray(String[][] arr){
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                System.out.print(arr[i][j]);
+            }
+            System.out.println();
+        }
+
     }
 }
